@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Sistema MaisComMenos</title>
+        <style>
+            body {
+                background-image: url('images/index.jpg');
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+            }
+            .welcome-buttons {
+                width: 30%;
+                height: 100px;
+                font-size: 24px;
+                margin: 10px;
+                border: none;
+                color: white;
+                cursor: pointer;
+            }
+            .mercadinho-button {
+                background-color: darkviolet;
+            }
+            .ong-button {
+                background-color: green;
+            }
+        </style>
+    </h:head>
+    <h:body>
+
+        <b:growl id="gro" show-summary="true" show-detail="true" delay="4000"/>
+
+        <!-- Boas-vindas -->
+        <div style="text-align: center; margin-top: 50px;">
+            <h2 style="color: white;">Bem-vindo ao Sistema MaisComMenos!</h2>
+            <h:form>
+                <b:commandButton value="Mercadinho" look="primary" styleClass="welcome-buttons mercadinho-button" action="loginMercadinho.xhtml"/>
+                <b:commandButton value="ONG" look="primary" styleClass="welcome-buttons ong-button" action="loginOng.xhtml"/>
+            </h:form>
+        </div>
+
+    </h:body>
+</html>
