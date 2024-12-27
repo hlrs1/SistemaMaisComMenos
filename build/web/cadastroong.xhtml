@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>CADASTRO DA ONG</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <p:panelGrid columns="3">
+                
+                <h:outputText value="Nome:"/>
+                <h:inputText value="#{ongController.ongCadastro.nome}"
+                                 required="true" requiredMessage="O nome é obrigatório!"
+                                 id="txtNome"/>
+                    <p:message for="txtNome"/>
+                    
+                <h:outputText value="Login:"/>
+                <h:inputText value="#{ongController.ongCadastro.login}"
+                                 required="true" requiredMessage="O login é obrigatório!"
+                                 id="txtLogin"/>
+                    <p:message for="txtNome"/>
+                    
+                <h:outputText value="Senha:"/>
+                <h:inputSecret value="#{ongController.ongCadastro.senha}"
+                                 required="true" requiredMessage="A senha é obrigatória!"
+                                 id="txtSenha"/>
+                    <p:message for="txtSenha"/>
+                    
+                <h:outputText value="Endereço:"/>
+                <h:inputText value="#{ongController.ongCadastro.endereco}"
+                                 required="true" requiredMessage="O endreço é obrigatório!"
+                                 id="txtEndereco"/>
+                    <p:message for="txtEndereco"/>
+                    
+                <h:outputText value="Contato:"/>
+                <h:inputText value="#{ongController.ongCadastro.contato}"
+                                 required="true" requiredMessage="O contato é obrigatório!"
+                                 id="txtContato"/>
+                    <p:message for="txtContato"/>
+                
+            </p:panelGrid>
+            <p:commandButton value="CADASTRAR"/>
+        </h:form>
+    </h:body>
+</html>
+
