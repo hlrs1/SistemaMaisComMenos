@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <h:head>
+        <title>Perfil do Mercadinho</title>
+        <style>
+            body {
+                background-image: url('images/perfilMercadinho.jpg');
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+            }
+        </style>
+    </h:head>
+
+    <h:body>
+        <!-- Componente growl para exibir mensagens -->
+        <p:growl id="growl" showDetail="true" sticky="false" life="3000"/>
+
+        <ui:include src="menuMercadinho.xhtml" rendered="true"/>
+
+        <b:form >
+            <p:fieldset legend="Meu Perfil" style="width: 70%;margin: 0 auto;border-width: medium; border-color: purple; background: whitesmoke" >
+            <b:panelGrid columns="2" colSpans="2,10">
+                <b:panel>
+                    <b:commandLink value="Editar Perfil" ajax="true" update=":formEditMercadinho"
+                                   oncomplete="PF('modalEditMercadinho').show()" style="font-weight: bolder">
+                        <f:setPropertyActionListener value="#{loginController.mercadinhoLogado}"
+                                                     target="#{mercadinhoController.selection}"/>
+                    </b:commandLink><br/>
+                    <b:commandLink value="Alterar Senha" ajax="true" 
+                                   oncomplete="PF('modalAltSenha').show()" style="font-weight: bolder"/>
+                </b:panel>
+                <b:panel style="width: 50%">
+                    <h:outputText value="Perfil de: " style="font-size: 20pt;font-weight: bolder"/>
+                    <h:outputText value="#{mercadinhoController.selection.nome}" style="font-size: 25pt; font-style: italic"/><br/><br/>
+                    <b:panelGrid columns="1">
+                        <b:panel>
+                        <h:outputText value="Nome:" style="font-weight: bolder"/>
+                        <h:outputText value=" #{mercadinhoController.selection.nome}"/>
+                        </b:panel>
+                        <b:panel>
+                        <h:outputText value="Login:" style="font-weight: bolder"/>
+                        <h:outputText value=" #{mercadinhoController.selection.login}"/>
+                        </b:panel>
+                        <b:panel>
+                        <h:outputText value="CNPJ:" style="font-weight: bolder"/>
+                        <h:outputText value=" #{mercadinhoController.selection.cnpj}"/>
+                        </b:panel>
+                        <b:panel>
+                        <h:outputText value="Endereço:" style="font-weight: bolder"/>
+                        <h:outputText value=" #{mercadinhoController.selection.endereco}"/>
+                        </b:panel>
+                        <b:panel>
+                        <h:outputText value="Contato:" style="font-weight: bolder"/>
+                        <h:outputText value=" #{mercadinhoController.selection.contato}"/>
+                        </b:panel>
+                    </b:panelGrid>
+                </b:panel>
+            </b:panelGrid>
+                </p:fieldset>
+        </b:form>
+
+        <!-- Modal para Edição do Perfil -->
+        <p:dialog header="Editar Perfil" widgetVar="modalEditMercadinho" modal="true" showEffect="fade"
+                  hideEffect="fade" id="modalEditMercadinho" width="600">
+            <h:form id="formEditMercadinho">
+                <p:panelGrid columns="2">
+                    <h:outputText value="Nome:"/>
+                    <p:inputText value="#{mercadinhoController.selection.nome}" />
+
+                    <h:outputText value="Login:"/>
+                    <p:inputText value="#{mercadinhoController.selection.login}" />
+
+                    <h:outputText value="CNPJ:"/>
+                    <p:inputText value="#{mercadinhoController.selection.cnpj}" />
+
+                    <h:outputText value="Endereço:"/>
+                    <p:inputText value="#{mercadinhoController.selection.endereco}" />
+
+                    <h:outputText value="Contato:"/>
+                    <p:inputText value="#{mercadinhoController.selection.contato}" />
+                </p:panelGrid>
+                <p:commandButton value="Salvar" action="#{mercadinhoController.alterar()}"
+                                 update=":growl, :formEditMercadinho" oncomplete="PF('modalEditMercadinho').hide()"/>
+                <p:commandButton value="Cancelar" onclick="PF('modalEditMercadinho').hide()" type="button"/>
+            </h:form>
+        </p:dialog>
+
+        <!-- Modal para Alterar Senha -->
+        <p:dialog header="Alterar Senha" widgetVar="modalAltSenha" modal="true" showEffect="fade"
+                  hideEffect="fade" id="modalAltSenha" width="400">
+            <h:form id="formAltSenha">
+                <b:panelGrid columns="2">
+
+                    <h:outputText value="senha atual"/>
+                    <b:inputSecret value="#{senha}"/>
+
+                    <h:outputText value="nova senha"/>
+                    <b:inputSecret value="#{nSenha}"/>
+
+                    <h:outputText value="confirma nova senha"/>
+                    <b:inputSecret value="#{confirma}"/>
+
+
+                </b:panelGrid>
+                <p:commandButton value="Alterar Senha" ajax="true" action="#{mercadinhoController.alterarSenha(senha, nSenha, confirma)}"
+                                 update=":growl, :formAltSenha" oncomplete="PF('modalAltSenha').hide()"/>
+                <p:commandButton value="Cancelar" onclick="PF('modalAltSenha').hide()" type="button"/>
+            </h:form>
+        </p:dialog>
+    </h:body>
+</html>
