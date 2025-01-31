@@ -26,7 +26,7 @@
 
         <ui:include src="menuOng.xhtml" rendered="true"/>
 
-        <b:form>
+        <h:form id="formPerfil">
             <p:fieldset legend="Meu Perfil" style="width: 70%;margin: 0 auto;border-width: medium; border-color: #1c7430; background: whitesmoke" >
             <b:panelGrid columns="2" colSpans="2,10">
                 <b:panel>
@@ -63,7 +63,7 @@
                 </b:panel>
             </b:panelGrid>
                 </p:fieldset>
-        </b:form>
+        </h:form>
 
 
         <!-- Modal para Edição do Perfil -->
@@ -84,7 +84,7 @@
                     <p:inputText value="#{ongController.selection.contato}" />
                 </p:panelGrid>
                 <p:commandButton value="Salvar" action="#{ongController.alterar()}"
-                                 update=":growl, :formEditOng" oncomplete="PF('modalEditOng').hide()"/>
+                                 update=":growl, :formEditOng, :formPerfil" oncomplete="PF('modalEditOng').hide()"/>
                 <p:commandButton value="Cancelar" onclick="PF('modalEditOng').hide()" type="button"/>
             </h:form>
         </p:dialog>
