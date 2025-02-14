@@ -26,147 +26,190 @@
             <p:growl id="gro" life="4000" showSummary="true" showDetail="true" sticky="false"/>
             <h:form id="formLotes">
                 <p:fieldset legend="Meus Produtos" style="width: 70%;margin: 0 auto;border-width: medium; border-color: darkgreen" >
+                    <p:tabView>
+                        <f:facet name="actions">
+                            Global actions
+                        </f:facet>
+                        <p:tab title="Lotes ofertados">
+                            <p:commandButton value="Novo produto" onclick="location.href = 'inserirProduto.xhtml'"/><br/><br/>
+                            <b:panelGrid columns="3" style="width: 100%;margin: 0 auto" colSpans="4,4,4" >
+                                <c:forEach items="#{produtoController.carregarLotesProdutos()}" var="produto">
+                                    <c:if test="${produto.ongInteressada eq null}">
+                                        <c:if test="${produto.diasParaVencer() ge 0}">
+                                            <p:panel header="${produto.produto} ${produto.marca}" style="text-align:center;background: wheat; border-width: medium; border-color: purple">
+                                                <p:panel style="text-align:center;background: whitesmoke">
+                                                    <h:outputText value="Produto:" style="font-weight: bolder"/>
+                                                    <h:outputText value=" ${produto.produto}"/><br/>
+                                                    <h:outputText value="Marca:" style="font-weight: bolder"/>
+                                                    <h:outputText value=" ${produto.marca}"/><br/>
+                                                    <h:outputText value="Lote:" style="font-weight: bolder"/>
+                                                    <h:outputText value=" ${produto.lote}"/><br/>
+                                                    <h:outputText value="Quantidade:" style="font-weight: bolder"/>
+                                                    <h:outputText value=" ${produto.quantidade}"/><br/>
+                                                    <h:outputText value="Preço de Venda:" style="font-weight: bolder"/>
+                                                    <h:outputText value=" ${produto.precoInicialFormatado}"/><br/>
+                                                    <h:outputText value="Preço com Desconto:" style="font-weight: bolder"/>
+                                                    <h:outputText value=" ${produto.precoFinalFormatado}"/><br/>
+                                                    <h:outputText value="validade:" style="font-weight: bolder"/>
+                                                    <h:outputText value=" ${produto.validadeFormatada}"/><br/><br/>
+                                                    <c:choose>
+                                                        <c:when test="#{produto.diasParaVencer() lt 0}">
+                                                            <h:outputText value="Produto vencido há #{produto.diasParaVencer()*-1} dia(s)" style="color: crimson;font-weight: bold;font-size: x-large" />
+                                                        </c:when>
+                                                        <c:when test="#{produto.diasParaVencer() eq 0}">
+                                                            <h:outputText value="Produto vence hoje!" style="color: crimson;font-weight: bold;font-size: x-large" />
+                                                        </c:when>
+                                                        <c:when test="#{produto.diasParaVencer() gt 2}">
+                                                            <h:outputText value="Dias para vencer: #{produto.diasParaVencer()}" style="color: black;font-weight: bold " />
+                                                        </c:when>
+                                                        <c:otherwise>
 
-                    <f:facet name="actions">
-                        Global actions
-                    </f:facet>
-                    <p:commandButton value="Novo produto" onclick="location.href = 'inserirProduto.xhtml'"/><br/><br/>
-                    <b:panelGrid columns="3" style="width: 100%;margin: 0 auto" colSpans="4,4,4" >
-                        <c:forEach items="#{produtoController.carregarLotesProdutos()}" var="produto">
-                            <c:if test="${produto.diasParaVencer() ge 0}">
-                                <c:if test="${produto.status eq 'pendente'}">
-                                    <p:panel header="${produto.produto} ${produto.marca}" style="text-align:center;background: wheat; border-width: medium; border-color: purple">
-                                        <p:panel style="text-align:center;background: whitesmoke">
-                                            <h:outputText value="Produto:" style="font-weight: bolder"/>
-                                            <h:outputText value=" ${produto.produto}"/><br/>
-                                            <h:outputText value="Marca:" style="font-weight: bolder"/>
-                                            <h:outputText value=" ${produto.marca}"/><br/>
-                                            <h:outputText value="Lote:" style="font-weight: bolder"/>
-                                            <h:outputText value=" ${produto.lote}"/><br/>
-                                            <h:outputText value="Quantidade:" style="font-weight: bolder"/>
-                                            <h:outputText value=" ${produto.quantidade}"/><br/>
-                                            <h:outputText value="Preço de Venda:" style="font-weight: bolder"/>
-                                            <h:outputText value=" ${produto.precoInicialFormatado}"/><br/>
-                                            <h:outputText value="Preço com Desconto:" style="font-weight: bolder"/>
-                                            <h:outputText value=" ${produto.precoFinalFormatado}"/><br/>
-                                            <h:outputText value="validade:" style="font-weight: bolder"/>
-                                            <h:outputText value=" ${produto.validadeFormatada}"/><br/><br/>
+                                                            <h:outputText value="Dias para vencer: #{produto.diasParaVencer()}" style="color: red; font-weight: bolder;"/>
 
-                                            <c:choose>
-                                                <c:when test="#{produto.diasParaVencer() lt 0}">
-                                                    <h:outputText value="Produto vencido há #{produto.diasParaVencer()*-1} dia(s)" style="color: crimson;font-weight: bold;font-size: x-large" />
-                                                </c:when>
-                                                <c:when test="#{produto.diasParaVencer() eq 0}"> 
+                                                        </c:otherwise>
+
+
+                                                    </c:choose>
+
+                                                </p:panel><br/>
+                                                <c:if test="#{produto.diasParaVencer() gt 1}">
+                                                    <p:commandButton value="editar" ajax="true" update=":formEditLote" action="#{produtoController.setarLote(produto)}" oncomplete="$('.mLote').modal('show')" />
+                                                </c:if>
+                                                <p:commandButton value="deletar" ajax="true" actionListener="#{produtoController.setarLote(produto)}" action="#{produtoController.deletar()}" update=":formLotes" />
+                                            </p:panel>
+                                        </c:if>
+
+                                    </c:if>
+                                </c:forEach>
+                            </b:panelGrid>
+                        </p:tab>
+                        <p:tab title="Pedidos em andamento">
+                            <b:panelGrid columns="3" style="width: 100%;margin: 0 auto" colSpans="4,4,4" >
+                                <c:forEach items="#{produtoController.carregarLotesProdutos()}" var="produto">
+
+                                    <c:if test="${produto.ongInteressada ne null and produto.status ne 'finalizado'}">
+
+
+                                        <p:panel header="${produto.produto} ${produto.marca}" style="text-align:center; background: darkgrey;border-width: medium; border-color: purple">
+                                            <p:panel style="background:darkgray">
+                                                <h:outputText value="Produto:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${produto.produto}"/><br/>
+                                                <h:outputText value="Marca:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${produto.marca}"/><br/>
+                                                <h:outputText value="Lote:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${produto.lote}"/><br/>
+                                                <h:outputText value="Quantidade:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${produto.quantidade}"/><br/>
+                                                <h:outputText value="Preço de Venda:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${produto.precoInicialFormatado}"/><br/>
+                                                <h:outputText value="Preço com Desconto:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${produto.precoFinalFormatado}"/><br/>
+                                                <h:outputText value="validade:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${produto.validadeFormatada}"/><br/><br/>
+                                                <c:choose>
+                                                    <c:when test="#{produto.diasParaVencer() lt 0}"> <!-- menor que zero -->
+                                                        <h:outputText value="Produto vencido há #{produto.diasParaVencer()*-1} dia(s)" style="color: crimson;font-weight: bold;font-size: x-large" /><br/><br/>
+                                                    </c:when>
+                                                    <c:when test="#{produto.diasParaVencer() eq 0}"> <!-- igual a zero -->
 
                                                         <h:outputText value="O produto vence hoje!" style="color: red; font-weight: bolder"/><br/><br/>
 
                                                     </c:when>
-                                                <c:when test="#{produto.diasParaVencer() gt 2}">
-                                                    <h:outputText value="Dias para vencer: #{produto.diasParaVencer()}" style="color: black;font-weight: bold " />
-                                                </c:when>
-                                                <c:otherwise>
+                                                    <c:when test="#{produto.diasParaVencer() gt 2}"> <!-- maior que 2 -->
+                                                        <h:outputText value="Dias para vencer: #{produto.diasParaVencer()}" style="color: black; font-weight: bold" /><br/><br/>
+                                                    </c:when>
+                                                    <c:otherwise> <!-- 1 ou 2 -->
 
-                                                    <h:outputText value="Dias para vencer: #{produto.diasParaVencer()}" style="color: red; font-weight: bolder;"/>
+                                                        <h:outputText value="Dias para vencer: #{produto.diasParaVencer()}" style="color: red; font-weight: bolder"/><br/><br/>
 
-                                                </c:otherwise>
-
-
-                                            </c:choose>
-
-                                        </p:panel><br/>
-                                        <c:if test="#{produto.diasParaVencer() ge 0}">
-                                            <c:if test="#{produto.ongInteressada eq null}">
-                                            <p:commandButton value="editar" ajax="true" update=":formEditLote" action="#{produtoController.setarLote(produto)}" oncomplete="$('.mLote').modal('show')" />
-                                            <p:commandButton value="deletar" ajax="true" action="#{produtoController.setarLote(produto)}" onsuccess="#{produtoController.deletar()}" update=":formLotes" />
-                                        </c:if>
-                                        </c:if>
+                                                    </c:otherwise>
 
 
+                                                </c:choose>
+                                                <h:outputText value="Ong Interessada:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${produto.ongInteressada.nome}"/><br/><br/>
+                                                <a href="//wa.me/55#{produto.ongInteressada.contato}" target="_blank" > <img src="images/wapp.png" width="100"/></a>
+                                                <p:commandButton value="Finalizar" ajax="true" update=":formEncerrar :formLotes" actionListener="#{produtoController.setarLote(produto)}" action="#{produtoController.alterarStatus()}" 
+                                                                 oncomplete="$('.mFim').modal('show')" style="background:  red">
+                                                    <p:confirm message="Deseja finalizar a transação para o Lote do produto: ${produto.produto} ${produto.marca} com a ONG ${produto.ongInteressada.nome}?"/>
+                                                </p:commandButton>
 
-                                        <c:if test="#{produto.diasParaVencer() gt 1 and produto.ongInteressada ne null}">
-                                            <h:outputText value="Ong Interessada:" style="font-weight: bolder"/>
-                                            <h:outputText value=" ${produto.ongInteressada.nome}"/><br/><br/>
-                                            <a href="//wa.me/55#{produto.ongInteressada.contato}" target="_blank" > <img src="images/wapp.png" width="100"/></a>
 
-                                            <p:commandButton value="Finalizar" ajax="true" update=":formEncerrar :formLotes" actionListener="#{produtoController.setarLote(produto)}" action="#{produtoController.alterarStatus()}" 
-                                                             oncomplete="$('.mFim').modal('show')" style="background:  red">
-                                                <p:confirm message="Deseja finalizar a transação para o Lote do produto: ${produto.produto} ${produto.marca} com a ONG ${produto.ongInteressada.nome}?"/>
-                                            </p:commandButton>
-                                        </c:if>
-                                    </p:panel>
-                                </c:if>
-                                <c:if test="${produto.status eq 'finalizado'}">
-                                    <p:panel header="${produto.produto} ${produto.marca}" style="text-align:center;background: wheat; border-width: medium; border-color: purple">
-                                        <p:panel style="text-align:center;background: whitesmoke">
-                                            <h:outputText value="Produto:" style="font-weight: bolder"/>
-                                            <h:outputText value=" ${produto.produto}"/><br/>
-                                            <h:outputText value="Marca:" style="font-weight: bolder"/>
-                                            <h:outputText value=" ${produto.marca}"/><br/>
-                                            <h:outputText value="Lote:" style="font-weight: bolder"/>
-                                            <h:outputText value=" ${produto.lote}"/><br/>
-                                            <h:outputText value="Quantidade:" style="font-weight: bolder"/>
-                                            <h:outputText value=" ${produto.quantidade}"/><br/>
-                                            <h:outputText value="Preço de Venda:" style="font-weight: bolder"/>
-                                            <h:outputText value=" ${produto.precoInicialFormatado}"/><br/>
-                                            <h:outputText value="Preço com Desconto:" style="font-weight: bolder"/>
-                                            <h:outputText value=" ${produto.precoFinalFormatado}"/><br/>
-                                            <h:outputText value="validade:" style="font-weight: bolder"/>
-                                            <h:outputText value=" ${produto.validadeFormatada}"/><br/><br/>
-                                            <h:outputText value="Transação Finalizada" style="color: green; font-weight: bolder"/><br/><br/>
+                                            </p:panel>
+                                        </p:panel>
+                                    </c:if>
+
+                                </c:forEach>
+                            </b:panelGrid>
+                        </p:tab>
+                        <p:tab title="Transações concluídas">
+                            <b:panelGrid columns="3" style="width: 100%;margin: 0 auto" colSpans="4,4,4" >
+                                <c:forEach items="#{produtoController.carregarLotesProdutos()}" var="produto">
+
+                                    <c:if test="${produto.ongInteressada ne null and produto.status eq 'finalizado'}">
+                                        <p:panel header="${produto.produto} ${produto.marca}" style="text-align:center; background: lightgray;border-width: medium; border-color: purple">
+                                            <p:panel style="background:lightgray">
+                                                <h:outputText value="Produto:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${produto.produto}"/><br/>
+                                                <h:outputText value="Marca:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${produto.marca}"/><br/>
+                                                <h:outputText value="Lote:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${produto.lote}"/><br/>
+                                                <h:outputText value="Quantidade:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${produto.quantidade}"/><br/>
+                                                <h:outputText value="Preço de Venda:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${produto.precoInicialFormatado}"/><br/>
+                                                <h:outputText value="Preço com Desconto:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${produto.precoFinalFormatado}"/><br/>
+                                                <h:outputText value="validade:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${produto.validadeFormatada}"/><br/><br/>
+                                                <h:outputText value="Transação Finalizada" style="color: green; font-weight: bolder"/><br/><br/>
                                                 <h:outputText value="Ong Interessada:" style="font-weight: bolder"/>
                                                 <h:outputText value=" ${produto.ongInteressada.nome}"/><br/><br/>
 
-                                        </p:panel><br/>
-                                        
-                                    </p:panel>
-                                </c:if>
 
-                            </c:if>
+                                            </p:panel>
+                                        </p:panel>
+                                    </c:if>
 
-                            <c:if test="${produto.diasParaVencer() lt 0}">
-                                <p:panel header="${produto.produto} ${produto.marca}" style="text-align:center; background: lightgray;border-width: medium; border-color: purple">
-                                    <p:panel style="background:lightgray">
-                                        <h:outputText value="Produto:" style="font-weight: bolder"/>
-                                        <h:outputText value=" ${produto.produto}"/><br/>
-                                        <h:outputText value="Marca:" style="font-weight: bolder"/>
-                                        <h:outputText value=" ${produto.marca}"/><br/>
-                                        <h:outputText value="Lote:" style="font-weight: bolder"/>
-                                        <h:outputText value=" ${produto.lote}"/><br/>
-                                        <h:outputText value="Quantidade:" style="font-weight: bolder"/>
-                                        <h:outputText value=" ${produto.quantidade}"/><br/>
-                                        <h:outputText value="Preço de Venda:" style="font-weight: bolder"/>
-                                        <h:outputText value=" ${produto.precoInicialFormatado}"/><br/>
-                                        <h:outputText value="Preço com Desconto:" style="font-weight: bolder"/>
-                                        <h:outputText value=" ${produto.precoFinalFormatado}"/><br/>
-                                        <h:outputText value="validade:" style="font-weight: bolder"/>
-                                        <h:outputText value=" ${produto.validadeFormatada}"/><br/><br/>
-                                        <h:outputText value="Produto vencido há #{produto.diasParaVencer()*-1} dia(s)" style="color: crimson;font-weight: bold;font-size: x-large" /><br/><br/>
-                                        <p:commandButton value="deletar" ajax="true" action="#{produtoController.setarLote(produto)}" update=":formLotes">
-                                            <p:confirm message="Deseja deletar o Lote do produto: ${produto.produto} ${produto.marca}?"/>
-                                        </p:commandButton>
-                                        <p:confirmDialog global="true" >
-                                            <p:commandButton value="sim" ajax="true" action="#{produtoController.deletar()}" update=":formLotes" styleClass="ui-confirmdialog-yes"/>
-                                            <p:commandButton value="não" styleClass="ui-confirmdialog-no"/>
+                                </c:forEach>
+                            </b:panelGrid>
+                        </p:tab>
+                        <p:tab title="Produtos vencidos">
+                            <b:panelGrid columns="3" style="width: 100%;margin: 0 auto" colSpans="4,4,4" >
+                                <c:forEach items="#{produtoController.carregarLotesProdutos()}" var="produto">
 
-                                        </p:confirmDialog>
+                                    <c:if test="${produto.diasParaVencer() lt 0}">
+                                        <p:panel header="${produto.produto} ${produto.marca}" style="text-align:center; background: lightgray;border-width: medium; border-color: purple">
+                                            <p:panel style="background:lightgray">
+                                                <h:outputText value="Produto:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${produto.produto}"/><br/>
+                                                <h:outputText value="Marca:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${produto.marca}"/><br/>
+                                                <h:outputText value="Lote:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${produto.lote}"/><br/>
+                                                <h:outputText value="Quantidade:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${produto.quantidade}"/><br/>
+                                                <h:outputText value="Preço de Venda:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${produto.precoInicialFormatado}"/><br/>
+                                                <h:outputText value="Preço com Desconto:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${produto.precoFinalFormatado}"/><br/>
+                                                <h:outputText value="validade:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${produto.validadeFormatada}"/><br/><br/>
+                                                <h:outputText value="Produto vencido há #{produto.diasParaVencer()*-1} dia(s)" style="color: crimson;font-weight: bold;font-size: x-large" /><br/><br/>
+                                                <p:commandButton value="deletar" ajax="true" actionListener="#{produtoController.setarLote(produto)}" action="#{produtoController.deletar()}" update=":formLotes">
+                                                    <p:confirm message="Deseja deletar o Lote do produto: ${produto.produto} ${produto.marca}?"/>
+                                                </p:commandButton>
 
+                                            </p:panel>
+                                        </p:panel>
+                                    </c:if>
 
-                                    </p:panel>
-                                </p:panel>
-                            </c:if>
-
-                        </c:forEach>
-                    </b:panelGrid>
-
-                    <!--<p:tab title="Produtos vencidos">
-                        <b:panelGrid columns="3" style="width: 100%;margin: 0 auto" colSpans="4,4,4" >
-                            <c:forEach items="#{produtoController.carregarLotesProdutos()}" var="produto">
-
-                                
-
-                            </c:forEach>
-                        </b:panelGrid>
-                    </p:tab>                              IMPLEMENTAÇÃO EM OUTRA ISSUE-->
+                                </c:forEach>
+                            </b:panelGrid>
+                        </p:tab>
+                        
+                    </p:tabView>
                 </p:fieldset>
             </h:form>
 
@@ -198,7 +241,7 @@
                          close-on-escape="false">
 
                     <h:outputText value="Transação para o lote: #{produtoController.loteProdutoSelecionado.produto} #{produtoController.loteProdutoSelecionado.marca} finalizada!"/><br/><br/>
-                    <p:commandButton value="Ok"  ajax="true" oncomplete="$('.mFim').modal('hide')" update=":formLotes"/>
+                    <p:commandButton value="Ok" action="#{produtoController.alterarStatus()}" ajax="true" oncomplete="$('.mFim').modal('hide')" update=":formLotes"/>
 
                 </b:modal>
                 <p:confirmDialog global="true" >
@@ -209,6 +252,7 @@
             </b:form>
 
         </c:if>
+        
 
     </h:body>
 </html>
